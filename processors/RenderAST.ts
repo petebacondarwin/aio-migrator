@@ -3,15 +3,19 @@ import {PugDocument} from '../Document';
 import * as pug from '../pug-interfaces';
 const walk = require('pug-walk');
 
-export class RenderContentsProcessor implements Processor {
-  name = 'renderContentsProcessor';
+export class RenderASTProcessor implements Processor {
+  name = 'renderASTProcessor';
 
   $process(docs: DocCollection) {
-    docs.forEach((doc: PugDocument) => doc.renderedContent = renderContents(doc));
+    docs.forEach((doc: PugDocument) => {
+      if (doc.docType === 'pug-document') {
+        doc.renderedAST = renderAST(doc);
+      }
+    });
   }
 }
 
-function renderContents(doc: PugDocument) {
+function renderAST(doc: PugDocument) {
   let output = [];
   let indent = 0;
   walk(doc.ast, (node: pug.Node, replace: Function) => {

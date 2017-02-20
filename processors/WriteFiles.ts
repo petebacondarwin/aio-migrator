@@ -7,13 +7,25 @@ const {sync: mkdirp} = require('mkdirp');
 export class WriteFilesProcessor implements Processor {
   name = 'writeFilesProcessor';
   outputFolder: string;
-  $after = ['renderContentsProcessor'];
+  $after = ['renderASTProcessor'];
 
   $process(docs: DocCollection) {
     docs.forEach((doc: PugDocument) => {
-      const outputPath = resolve(this.outputFolder, doc.relativePath.replace('.jade', '.md'));
-      mkdirp(dirname(outputPath));
-      writeFileSync(outputPath, doc.renderedContent, 'utf8');
+      if (doc.docType === 'pug-document') {
+        const outputPath = resolve(this.outputFolder, doc.relativePath.replace('.jade', '.md'));
+        mkdirp(dirname(outputPath));
+        let renderedContents = '';
+        if (doc.title) {
+          renderedContents += '@title\n' + doc.title + '\n\n';
+        }
+        if (doc.intro) {
+          renderedContents += '@intro\n' + doc.intro + '\n\n';
+        }
+        if (doc.renderedAST) {
+          renderedContents += '@description\n' + doc.renderedAST;
+        }
+        writeFileSync(outputPath, renderedContents, 'utf8');
+      }
     });
   }
 }

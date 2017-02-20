@@ -10,25 +10,27 @@ export interface MixinReplacer {
 
 export class TransformMixinsProcessor implements Processor {
   name = 'transformMixinsProcessor';
-  $before = ['renderContentsProcessor'];
+  $before = ['renderASTProcessor'];
 
   constructor(private mixinReplacers: { [mixinName: string]: MixinReplacer }) {}
 
   $process(docs: DocCollection) {
     docs.forEach((doc: PugDocument) => {
-      walk(doc.ast, (node: pug.Node, replace: pug.ReplaceFunction) => {
-        if (node.type === 'Mixin') {
-          const mixinNode = node as pug.Mixin;
-          let replacer = this.mixinReplacers[mixinNode.name];
+      if (doc.docType === 'pug-document') {
+        walk(doc.ast, (node: pug.Node, replace: pug.ReplaceFunction) => {
+          if (node.type === 'Mixin') {
+            const mixinNode = node as pug.Mixin;
+            let replacer = this.mixinReplacers[mixinNode.name];
 
-          const params = parseParams(mixinNode.args);
-          const extras = mixinNode.attrs.reduce((extras, attr) => Object.assign(extras, {[attr.name]: attr.val}), {});
+            const params = parseParams(mixinNode.args);
+            const extras = mixinNode.attrs.reduce((extras, attr) => Object.assign(extras, {[attr.name]: attr.val}), {});
 
-          if (mixinNode.call && replacer) {
-            replacer(mixinNode, params, extras, replace);
+            if (mixinNode.call && replacer) {
+              replacer(mixinNode, params, extras, replace);
+            }
           }
-        }
-      });
+        });
+      }
     });
   }
 }

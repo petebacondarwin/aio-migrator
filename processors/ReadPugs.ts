@@ -19,7 +19,9 @@ export class ReadPugsProcessor implements Processor {
       const contents = readFileSync(filePath, 'utf8');
       try {
         const ast = parse(lex(contents)) as Block;
-        docs.push(new PugDocument(filePath, relative(this.sourceBase, filePath), contents, ast));
+        const doc = new PugDocument(filePath, relative(this.sourceBase, filePath), contents);
+        doc.ast = ast;
+        docs.push(doc);
       } catch (e) {
         console.log('Failed to process', filePath, e);
       }

@@ -11,19 +11,21 @@ interface FileTreeNode {
 
 export class TransformFileTreesProcessor implements Processor {
   name = 'transformFileTreesProcessor';
-  $before = ['renderContentsProcessor'];
+  $before = ['renderASTProcessor'];
 
   $process(docs: DocCollection) {
     docs.forEach((doc: PugDocument) => {
-      walk(doc.ast, (node: pug.Node, replace: pug.ReplaceFunction) => {
-        if (node.type === 'Tag') {
-          const tagNode = node as pug.Tag;
-          const cssClasses = collectClasses(tagNode);
-          if (cssClasses['filetree']) {
-            replace(createTagNode(tagNode, 'aio-filetree', {}, parseChildren(tagNode.block)));
+      if (doc.docType === 'pug-document') {
+        walk(doc.ast, (node: pug.Node, replace: pug.ReplaceFunction) => {
+          if (node.type === 'Tag') {
+            const tagNode = node as pug.Tag;
+            const cssClasses = collectClasses(tagNode);
+            if (cssClasses['filetree']) {
+              replace(createTagNode(tagNode, 'aio-filetree', {}, parseChildren(tagNode.block)));
+            }
           }
-        }
-      });
+        });
+      }
     });
   }
 }

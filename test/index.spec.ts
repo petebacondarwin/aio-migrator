@@ -16,7 +16,7 @@ describe('migrator', () => {
       name = 'getDocsProcessor';
       $process(_docs: DocCollection) {
         docs = {};
-        _docs.forEach((doc: PugDocument) => docs[doc.relativePath] = doc.renderedContent);
+        _docs.forEach((doc: PugDocument) => docs[doc.relativePath] = doc.renderedAST);
       }
     }
 

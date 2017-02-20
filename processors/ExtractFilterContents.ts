@@ -6,22 +6,24 @@ const walk = require('pug-walk');
 
 export class ExtractFilterContentsProcessor implements Processor {
   name = 'extractFilterContentsProcessor';
-  $before = ['renderContentsProcessor'];
+  $before = ['renderASTProcessor'];
 
   constructor(public matchFilters: string[]) {}
 
   $process(docs: DocCollection) {
     docs.forEach((doc: PugDocument) => {
-      walk(doc.ast, (node: pug.Node, replace: Function) => {
-        if (node.type === 'Filter') {
-          const filterNode = node as pug.Filter;
-          if (this.matchFilters.some(filter => filter === filterNode.name)) {
-            replace([
-              ...filterNode.block.nodes,
-            ]);
+      if (doc.docType === 'pug-document') {
+        walk(doc.ast, (node: pug.Node, replace: Function) => {
+          if (node.type === 'Filter') {
+            const filterNode = node as pug.Filter;
+            if (this.matchFilters.some(filter => filter === filterNode.name)) {
+              replace([
+                ...filterNode.block.nodes,
+              ]);
+            }
           }
-        }
-      });
+        });
+      }
     });
   }
 }
