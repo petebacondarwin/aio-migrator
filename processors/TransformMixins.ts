@@ -47,7 +47,7 @@ export const makeTabs = (node, params, extraParams, replace) => {
   const regions = parseInnerParams(params[1]);
   const titles = parseInnerParams(params[2]);
   const tabNodes = files.map((file, index) => {
-    const region = regions[index] ? ` region = '${regions[index]}'` : '';
+    const region = regions[index] ? ` region='${regions[index]}'` : '';
     const title = titles[index] || file;
     return createTagNode(node, 'md-tab', {label: `"${title}"`}, [createTextNode(node, `{@example '${file}'${region}}`)]);
   });
