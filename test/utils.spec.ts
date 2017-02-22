@@ -27,6 +27,7 @@ describe('utils', () => {
     it('should handle empty args', () => {
       expect(parseArgs(',')).to.eql(['', '']);
       expect(parseArgs(',,')).to.eql(['', '', '']);
+      expect(parseArgs('v1,,,')).to.eql(['v1', '', '', '']);
       expect(parseArgs(',a,b')).to.eql(['', 'a', 'b']);
       expect(parseArgs('a,b,')).to.eql(['a', 'b', '']);
       expect(parseArgs('a,`b`,')).to.eql(['a', 'b', '']);

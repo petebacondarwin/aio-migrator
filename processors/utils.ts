@@ -82,6 +82,8 @@ export function parseArgs(argString: string) {
         if (char === ',') {
           // empty argument
           args.push('');
+          startArgIndex = index + 1;
+          endArgIndex = index + 1;
           state = ParseState.afterComma;
         } else if ('\'"`'.indexOf(char) !== -1) {
           // enter string (a quote char)
