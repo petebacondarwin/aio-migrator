@@ -1,4 +1,3 @@
-require('ts-node/register');
 const expect = require('chai').expect;
 
 import {resolve} from 'path';

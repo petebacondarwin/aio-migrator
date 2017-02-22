@@ -1,7 +1,7 @@
 import {DocCollection, Processor} from 'dgeni';
 import {PugDocument} from '../Document';
 import * as pug from '../pug-interfaces';
-import {createTextNode} from './utils';
+import {createTextNode, stripQuotes} from './utils';
 const walk = require('pug-walk');
 
 export class TransformAnchorsProcessor implements Processor {
@@ -23,15 +23,5 @@ export class TransformAnchorsProcessor implements Processor {
         });
       }
     });
-  }
-}
-
-function stripQuotes(str: string) {
-  const firstChar = str.charAt(0);
-  const lastChar = str.charAt(str.length - 1);
-  if ('"\'`'.indexOf(firstChar) !== -1 && firstChar === lastChar) {
-    return str.substr(1, str.length - 2);
-  } else {
-    return str;
   }
 }
