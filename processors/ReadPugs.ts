@@ -3,7 +3,7 @@ import {Block} from '../pug-interfaces';
 import {PugDocument} from '../Document';
 
 import {readFileSync} from 'fs';
-import {resolve, relative} from 'path';
+import {resolve, relative, basename, extname} from 'path';
 const glob = require('glob');
 const lex = require('pug-lexer');
 const parse = require('pug-parser');
@@ -19,7 +19,8 @@ export class ReadPugsProcessor implements Processor {
       const contents = readFileSync(filePath, 'utf8');
       try {
         const ast = parse(lex(contents)) as Block;
-        const doc = new PugDocument(filePath, relative(this.sourceBase, filePath), contents);
+        const baseName = basename(filePath, extname(filePath));
+        const doc = new PugDocument(filePath, relative(this.sourceBase, filePath), baseName, contents);
         doc.ast = ast;
         docs.push(doc);
       } catch (e) {

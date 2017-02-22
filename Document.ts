@@ -4,7 +4,8 @@ export class Document {
   docType = 'document';
   constructor(
       public filePath: string,
-      public relativePath: string) {}
+      public relativePath: string,
+      public baseName: string) {}
 }
 
 export class ContentDocument extends Document {
@@ -14,8 +15,9 @@ export class ContentDocument extends Document {
   constructor(
       filePath: string,
       relativePath: string,
+      baseName: string,
       public contents: string) {
-    super(filePath, relativePath);
+    super(filePath, relativePath, baseName);
   }
 }
 
@@ -30,7 +32,8 @@ export class DataDocument extends Document {
   constructor(
       filePath: string,
       relativePath: string,
+      baseName: string,
       public data: any) {
-    super(filePath, relativePath);
+    super(filePath, relativePath, baseName);
   }
 }

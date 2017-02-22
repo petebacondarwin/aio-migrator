@@ -5,7 +5,7 @@ import * as pug from '../pug-interfaces';
 const walk = require('pug-walk');
 
 export interface MixinReplacer {
-  (node: pug.Mixin, params: string[], extraParams: {[key: string]: string}, replace: pug.ReplaceFunction);
+  (doc: PugDocument, node: pug.Mixin, params: string[], extraParams: {[key: string]: string}, replace: pug.ReplaceFunction);
 }
 
 export class TransformMixinsProcessor implements Processor {
@@ -26,7 +26,7 @@ export class TransformMixinsProcessor implements Processor {
             const extras = mixinNode.attrs.reduce((extras, attr) => Object.assign(extras, {[attr.name]: attr.val}), {});
 
             if (mixinNode.call && replacer) {
-              replacer(mixinNode, params, extras, replace);
+              replacer(doc, mixinNode, params, extras, replace);
             }
           }
         });
@@ -35,21 +35,48 @@ export class TransformMixinsProcessor implements Processor {
   }
 }
 
-export const makeExample = (node, params, extraParams, replace) => {
-  const filePath = params[0];
+export const makeExample: MixinReplacer = (doc, node, params, extraParams, replace) => {
+  let filePath = isProjRelDir(params[0], doc.baseName) ? adjustFile(params[0], doc.baseName) : params[0];
   const region = params[1] ? ` region='${params[1]}'` : '';
   const lineNums = extraParams['format'] === '.' ? ` linenums='false'` : '';
   replace(createTextNode(node, `\n\n{@example '${filePath}'${region}${lineNums}}\n\n`));
 };
 
-export const makeTabs = (node, params, extraParams, replace) => {
+export const makeTabs: MixinReplacer = (doc, node, params, extraParams, replace) => {
   const files = parseInnerParams(params[0]);
   const regions = parseInnerParams(params[1]);
   const titles = parseInnerParams(params[2]);
   const tabNodes = files.map((file, index) => {
     const region = regions[index] ? ` region='${regions[index]}'` : '';
-    const title = titles[index] || file;
+    const title = titles[index] || computeTitle(file);
     return createTagNode(node, 'md-tab', {label: `"${title}"`}, [createTextNode(node, `{@example '${file}'${region}}`)]);
   });
   replace(createTagNode(node, 'md-tab-group', {}, tabNodes));
 };
+
+
+// COPIED FROM ANGULAR.IO JADE UTILS (SORT OF)
+
+// Converts the given project-relative path (like 'app/main.ts')
+// to a doc folder relative path (like 'quickstart/ts/app/main.ts')
+// by prefixing it with '<example-name>/ts/'.
+function adjustFile(filePath, exampleName) {
+  return exampleName + '/ts/' + filePath;
+}
+
+// Title is not given so use the filePath, removing any '.1' or '_1' qualifier on the end
+function computeTitle(filePath) {
+  const matches = filePath.match(/^(.*)[\._]\d(\.\w+)$/);
+  return matches ? matches[1] + matches[2] : filePath;
+}
+
+// Returns truthy iff path is example project relative.
+function isProjRelDir(path, baseName) {
+  return path.indexOf(baseName) !== 0 &&
+         !path.match(/\/(js|ts|dart)(-snippets)?\//) &&
+         !path.endsWith('e2e-spec.ts');
+  // Last conjunct handles case for shared project e2e test file like
+  // cb-component-communication/e2e-spec.js (is shared between ts & dart)
+  // TODO: generalize: compare start with getExampleName(); which needs to be fixed.
+}
+
