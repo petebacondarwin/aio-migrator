@@ -177,6 +177,12 @@ describe('migrator', () => {
       '',
     ));
   });
+
+  it('should fix paths to images', () => {
+    expect(docs['transform-image-paths.jade']).to.equal(_(
+      '<img src="assets/images/devguide/attribute-directives/first-highlight.png" alt="First Highlight"></img>',
+    ));
+  });
 });
 
 function _(...lines) {
