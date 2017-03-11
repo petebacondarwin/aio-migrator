@@ -12,7 +12,7 @@ export class TransformRelativeLinksProcessor implements Processor {
           if (url[0] === '#') {
             url = stripExtension(doc.relativePath) + url;
           } else if (!isAbsolute(url)) {
-            url = join(dirname(doc.relativePath), url);
+            url = join(dirname(doc.relativePath), stripExtension(url));
           }
           return `${title}(${url})`;
         });
@@ -22,7 +22,8 @@ export class TransformRelativeLinksProcessor implements Processor {
 };
 
 function stripExtension(url: string) {
-  return url.replace(/\.jade$/, '');
+  // the capturing group is to ensure we don't accidentally capture `../some/path/file-with-no-extension`
+  return url.replace(/\.[^\/]+$/, '');
 }
 
 function isAbsolute(url: string) {
