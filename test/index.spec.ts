@@ -23,7 +23,7 @@ describe('migrator', () => {
       .processor(new GetDocsProcessor())
       .config(function(readPugsProcessor: ReadPugsProcessor) {
         readPugsProcessor.sourceBase = resolve(__dirname, 'mocks');
-        readPugsProcessor.sourcePattern = '*.jade';
+        readPugsProcessor.sourcePattern = '**/*.jade';
       })
       .config(function (writeFilesProcessor: WriteFilesProcessor) {
         (writeFilesProcessor as any).$enabled = false;
@@ -183,6 +183,21 @@ describe('migrator', () => {
       '<img src="assets/images/devguide/attribute-directives/first-highlight.png" alt="First Highlight"></img>',
     ));
   });
+
+  it('should move cookbook docs to the guide folder, renaming if necessary', () => {
+    expect(docs['guide/test.jade']).to.equal(_(
+      '\n<h1>\n  Some text\n</h1>\n\n'
+    ));
+
+    expect(docs['guide/exists.jade']).to.equal(_(
+      '\n<h1>\n  guide\n</h1>\n\n'
+    ));
+
+    expect(docs['guide/cb-exists.jade']).to.equal(_(
+      '\n<h1>\n  cookbook\n</h1>\n\n'
+    ));
+  });
+
 });
 
 function _(...lines) {
