@@ -12,6 +12,7 @@ import {ExtractFilterContentsProcessor} from './processors/ExtractFilterContents
 import {TransformMixinsProcessor, makeExample, makeTabs} from './processors/TransformMixins';
 import {TransformImagePathsProcessor} from './processors/TransformImagePaths';
 import {MoveCookbookDocsProcessor} from './processors/MoveCookbookDocs';
+import {TransformRelativeLinksProcessor} from './processors/TransformRelativeLinks';
 import {resolve} from 'path';
 import {createTextNode, createTagNode, parseInnerParams} from './processors/utils';
 
@@ -28,6 +29,7 @@ const migratorPackage = new Package('migrator', [])
   .processor(new TransformImagePathsProcessor())
   .processor(new AttachMetaDataProcessor())
   .processor(new MoveCookbookDocsProcessor())
+  .processor(new TransformRelativeLinksProcessor())
   .processor(new WriteFilesProcessor())
   .config(function(readPugsProcessor: ReadPugsProcessor, readDataFilesProcessor: ReadDataFilesProcessor) {
     const AIO_PROJECT = resolve(__dirname, '../angular.io');

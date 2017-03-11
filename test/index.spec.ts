@@ -184,6 +184,14 @@ describe('migrator', () => {
     ));
   });
 
+  it('should fix paths to relative links', () => {
+    expect(docs['guide/transform-relative-links.jade']).to.equal(_(
+     '[guide 1](guide/guide-1)',
+     '[tutorial 1](tutorial/tutorial-1)',
+     '[internal link](guide/transform-relative-links#fragment)'
+    ));
+  });
+
   it('should move cookbook docs to the guide folder, renaming if necessary', () => {
     expect(docs['guide/test.jade']).to.equal(_(
       '\n<h1>\n  Some text\n</h1>\n\n'
