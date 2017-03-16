@@ -48,11 +48,18 @@ describe('migrator', () => {
     ));
   });
 
-  it('should remove and unindent `.l-sub-section`', () => {
-    expect(docs['remove-sub-section.jade']).to.equal(_(
+  it('should transform `.l-sub-section`', () => {
+    expect(docs['transform-sub-section.jade']).to.equal(_(
       'Some content',
       '',
+      '',
+      '~~~ {.l-sub-section}',
+      '',
       '## some heading',
+      '',
+      '~~~',
+      '',
+      ''
     ));
   });
 
