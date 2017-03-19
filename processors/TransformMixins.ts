@@ -60,6 +60,8 @@ export const makeTabs: MixinReplacer = (doc, node, params, extraParams, replace)
 };
 
 
+const PATH_TRANSFORM_EXCEPTIONS = [/cb-ts-to-js\/(js|ts)/];
+
 // COPIED FROM ANGULAR.IO JADE UTILS (SORT OF)
 
 // Converts the given project-relative path (like 'app/main.ts')
@@ -70,7 +72,11 @@ function computeFilePath(filePath, exampleName) {
   if (isProjRelDir(filePath, exampleName)) {
     filePath = exampleName + filePath;
   }
-  return filePath.replace(/\/(js|ts|dart)(-snippets)?\//, '/');
+  if (PATH_TRANSFORM_EXCEPTIONS.some(pattern => pattern.test(filePath))) {
+    return filePath;
+  } else {
+    return filePath.replace(/\/(js|ts|dart)\//, '/');
+  }
 }
 
 // Title is not given so use the filePath, removing any '.1' or '_1' qualifier on the end
@@ -82,7 +88,7 @@ function computeTitle(filePath) {
 // Returns truthy iff path is example project relative.
 function isProjRelDir(path, baseName) {
   return path.indexOf(baseName) !== 0 &&
-         !path.match(/\/(js|ts|dart)(-snippets)?\//) &&
+         !path.match(/\/(js|ts|dart)(-snippets|-es6(-decorators)?)?\//) &&
          !path.endsWith('e2e-spec.ts');
   // Last conjunct handles case for shared project e2e test file like
   // cb-component-communication/e2e-spec.js (is shared between ts & dart)

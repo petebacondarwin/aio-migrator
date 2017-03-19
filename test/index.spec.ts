@@ -101,6 +101,14 @@ describe('migrator', () => {
       '{@example \'cb-component-relative-paths/src/app/some.component.ts\' region=\'module-id\'}',
       '',
       'more text',
+      '',
+      '{@example \'cb-ts-to-js/ts/src/app/some.component.ts\' region=\'module-id\'}',
+      '',
+      '',
+      '',
+      '{@example \'cb-ts-to-js/js-es6-decorators/src/app/some.component.js\' region=\'module-id\'}',
+      '',
+      '',
     ));
   });
 
