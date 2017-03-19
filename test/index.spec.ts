@@ -96,16 +96,17 @@ describe('migrator', () => {
 
   it('should transform +makeExample(...)', () => {
     expect(docs['transform-makeExample.jade']).to.equal(_(
-      '',
+      'some text',
       '',
       '{@example \'cb-component-relative-paths/src/app/some.component.ts\' region=\'module-id\'}',
       '',
-      '',
+      'more text',
     ));
   });
 
   it('should transform +makeTabs(...)', () => {
     expect(docs['transform-makeTabs.jade']).to.equal(_(
+      'some text',
       '',
       '<md-tab-group>',
       '',
@@ -131,7 +132,7 @@ describe('migrator', () => {
       '',
       '</md-tab-group>',
       '',
-      '',
+      'more text',
       ));
   });
 

@@ -53,7 +53,10 @@ export const makeTabs: MixinReplacer = (doc, node, params, extraParams, replace)
     const title = titles[index] || computeTitle(file);
     return createTagNode(node, 'md-tab', {label: `"${title}"`}, [createTextNode(node, `{@example '${file}'${region}}`)]);
   });
-  replace(createTagNode(node, 'md-tab-group', {}, tabNodes));
+  replace([
+    createTextNode(node, '\n'), // need an empty line before the HTML begins for the markdown parser
+    createTagNode(node, 'md-tab-group', {}, tabNodes)
+  ]);
 };
 
 
