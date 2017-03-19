@@ -1,6 +1,7 @@
 import {Dgeni, DocCollection, Package} from 'dgeni';
 import {ReadPugsProcessor} from './processors/ReadPugs';
 import {ReadDataFilesProcessor} from './processors/ReadDataFiles';
+import {ReadContentFilesProcessor} from './processors/ReadContentFiles';
 import {RenderASTProcessor} from './processors/RenderAST';
 import {AttachMetaDataProcessor} from './processors/AttachMetaData';
 import {WriteFilesProcessor} from './processors/WriteFiles';
@@ -19,6 +20,7 @@ import {createTextNode, createTagNode, parseInnerParams} from './processors/util
 const migratorPackage = new Package('migrator', [])
   .processor(new ReadPugsProcessor())
   .processor(new ReadDataFilesProcessor())
+  .processor(new ReadContentFilesProcessor())
   .processor(new TransformAnchorsProcessor())
   .processor(new TransformComponentsProcessor(['alert', 's-rule', 'callout', 'l-sub-section']))
   .processor(new RemoveDivsProcessor(['l-main-section']))
@@ -31,13 +33,19 @@ const migratorPackage = new Package('migrator', [])
   .processor(new MoveCookbookDocsProcessor())
   .processor(new TransformRelativeLinksProcessor())
   .processor(new WriteFilesProcessor())
-  .config(function(readPugsProcessor: ReadPugsProcessor, readDataFilesProcessor: ReadDataFilesProcessor) {
+  .config(function(
+        readPugsProcessor: ReadPugsProcessor,
+        readDataFilesProcessor: ReadDataFilesProcessor,
+        readContentFilesProcessor: ReadContentFilesProcessor) {
     const AIO_PROJECT = resolve(__dirname, '../angular.io');
-    readPugsProcessor.sourcePattern = resolve(AIO_PROJECT, 'public/docs/ts/latest/!(api)/*.jade');
+    readPugsProcessor.sourcePattern = resolve(AIO_PROJECT, 'public/docs/ts/latest/!(api)/!(cheatsheet).jade');
     readPugsProcessor.sourceBase = resolve(AIO_PROJECT, 'public/docs/ts/latest');
 
     readDataFilesProcessor.sourcePattern = resolve(AIO_PROJECT, 'public/docs/ts/latest/!(api)/_data.json');
     readDataFilesProcessor.sourceBase = resolve(AIO_PROJECT, 'public/docs/ts/latest');
+
+    readContentFilesProcessor.sourcePattern = resolve(__dirname, 'content/**/*.{html,md}');
+    readContentFilesProcessor.sourceBase = resolve(__dirname, 'content');
   })
   .config(function(writeFilesProcessor: WriteFilesProcessor) {
     writeFilesProcessor.outputFolder = resolve(__dirname, 'output');

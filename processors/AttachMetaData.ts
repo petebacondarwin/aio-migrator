@@ -1,8 +1,6 @@
 import {DocCollection, Processor} from 'dgeni';
-import {PugDocument, Document, DataDocument} from '../Document';
-import * as pug from '../pug-interfaces';
+import {ContentDocument, Document, DataDocument} from '../Document';
 import {join, dirname} from 'path';
-const walk = require('pug-walk');
 
 export class AttachMetaDataProcessor implements Processor {
   name = 'attachMetaDataProcessor';
@@ -19,9 +17,10 @@ export class AttachMetaDataProcessor implements Processor {
         });
       });
 
-    docs.forEach((doc: PugDocument) => {
-      if (doc.docType === 'pug-document') {
-        const docData = data[doc.relativePath];
+    docs.forEach((doc: ContentDocument) => {
+      if (doc instanceof ContentDocument) {
+        // Get the data for this doc (or if it is not a jade doc the related jade doc)
+        const docData = data[doc.relativePath] || data[doc.relativePath.replace(/\.(html|md)$/, '.jade')];
         if (docData) {
           doc.title = docData.title;
           doc.intro = docData.intro;
