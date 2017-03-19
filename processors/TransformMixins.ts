@@ -36,10 +36,8 @@ export class TransformMixinsProcessor implements Processor {
 }
 
 export const makeExample: MixinReplacer = (doc, node, params, extraParams, replace) => {
-  let filePath = stripQuotes(params[0]);
-  if (isProjRelDir(filePath, doc.baseName)) {
-    filePath = adjustFile(filePath, doc.baseName);
-  }
+  let filePath = computeFilePath(params[0], doc.baseName);
+  console.log(filePath)
   const region = (params[1] && params[1] !== 'null') ? ` region='${stripQuotes(params[1])}'` : '';
   const lineNums = extraParams['format'] === '.' ? ` linenums='false'` : '';
   replace(createTextNode(node, `\n\n{@example '${filePath}'${region}${lineNums}}\n\n`));
@@ -50,6 +48,7 @@ export const makeTabs: MixinReplacer = (doc, node, params, extraParams, replace)
   const regions = parseInnerParams(stripQuotes(params[1]));
   const titles = parseInnerParams(stripQuotes(params[2]));
   const tabNodes = files.map((file, index) => {
+    file = computeFilePath(file, doc.baseName);
     const region = (regions[index] && regions[index] !== 'null') ? ` region='${regions[index]}'` : '';
     const title = titles[index] || computeTitle(file);
     return createTagNode(node, 'md-tab', {label: `"${title}"`}, [createTextNode(node, `{@example '${file}'${region}}`)]);
@@ -62,9 +61,13 @@ export const makeTabs: MixinReplacer = (doc, node, params, extraParams, replace)
 
 // Converts the given project-relative path (like 'app/main.ts')
 // to a doc folder relative path (like 'quickstart/ts/app/main.ts')
-// by prefixing it with '<example-name>/ts/'.
-function adjustFile(filePath, exampleName) {
-  return exampleName + '/ts/' + filePath;
+// by prefixing it with '<example-name>/'.
+function computeFilePath(filePath, exampleName) {
+  filePath = stripQuotes(filePath);
+  if (isProjRelDir(filePath, exampleName)) {
+    filePath = exampleName + filePath;
+  }
+  return filePath.replace(/\/(js|ts|dart)(-snippets)?\//, '/');
 }
 
 // Title is not given so use the filePath, removing any '.1' or '_1' qualifier on the end
