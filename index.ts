@@ -38,7 +38,7 @@ const migratorPackage = new Package('migrator', [])
         readDataFilesProcessor: ReadDataFilesProcessor,
         readContentFilesProcessor: ReadContentFilesProcessor) {
     const AIO_PROJECT = resolve(__dirname, '../angular.io');
-    readPugsProcessor.sourcePattern = resolve(AIO_PROJECT, 'public/docs/ts/latest/!(api)/!(cheatsheet).jade');
+    readPugsProcessor.sourcePattern = '{!(api)/!(cheatsheet).jade,!(_*|cheatsheet).jade}';
     readPugsProcessor.sourceBase = resolve(AIO_PROJECT, 'public/docs/ts/latest');
 
     readDataFilesProcessor.sourcePattern = resolve(AIO_PROJECT, 'public/docs/ts/latest/!(api)/_data.json');
