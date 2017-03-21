@@ -37,7 +37,6 @@ export class TransformMixinsProcessor implements Processor {
 
 export const makeExample: MixinReplacer = (doc, node, params, extraParams, replace) => {
   let filePath = computeFilePath(params[0], doc.baseName);
-  console.log(filePath)
   const region = (params[1] && params[1] !== 'null') ? ` region='${stripQuotes(params[1])}'` : '';
   const lineNums = extraParams['format'] === '.' ? ` linenums='false'` : '';
   replace(createTextNode(node, `\n\n{@example '${filePath}'${region}${lineNums}}\n\n`));
