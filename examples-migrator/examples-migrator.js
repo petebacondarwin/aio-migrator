@@ -55,3 +55,7 @@ SPECIAL_EXAMPLES.map(example => {
   const name = example.split('/').pop();
   fs.copySync(example, path.join(EXAMPLES_PATH, name));
 });
+
+// Copy our custom gitignore and replace the other one
+const gitignore = fs.readFileSync(path.join(__dirname, 'gitignore'));
+fs.writeFileSync(path.join(EXAMPLES_PATH, '.gitignore'), gitignore);
