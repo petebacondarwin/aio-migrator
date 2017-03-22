@@ -98,11 +98,11 @@ describe('migrator', () => {
     expect(docs['transform-makeExample.jade']).to.equal(_(
       'some text',
       '',
-      '{@example \'cb-component-relative-paths/src/app/some.component.ts\' region=\'module-id\'}',
+      '{@example \'cb-component-relative-paths/src/app/some.component.ts\' region=\'module-id\' linenums=\'false\'}',
       '',
       'more text',
       '',
-      '{@example \'cb-ts-to-js/ts/src/app/some.component.ts\' region=\'module-id\'}',
+      '{@example \'cb-ts-to-js/ts/src/app/some.component.ts\' region=\'module-id\' linenums=\'15\'}',
       '',
       '',
       '',
