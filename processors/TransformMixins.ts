@@ -23,8 +23,7 @@ export class TransformMixinsProcessor implements Processor {
             let replacer = this.mixinReplacers[mixinNode.name];
 
             const params = parseArgs(mixinNode.args);
-            const extras = mixinNode.attrs.reduce((extras, attr) => Object.assign(extras, {[attr.name]: attr.val}), {});
-
+            const extras = mixinNode.attrs.reduce((extras, attr) => Object.assign(extras, {[attr.name]: stripQuotes(attr.val)}), {});
             if (mixinNode.call && replacer) {
               replacer(doc, mixinNode, params, extras, replace);
             }
@@ -38,8 +37,17 @@ export class TransformMixinsProcessor implements Processor {
 export const makeExample: MixinReplacer = (doc, node, params, extraParams, replace) => {
   let filePath = computeFilePath(params[0], doc.baseName);
   const region = (params[1] && params[1] !== 'null') ? ` region='${stripQuotes(params[1])}'` : '';
-  const lineNums = extraParams['format'] === '.' ? ` linenums='false'` : '';
-  replace(createTextNode(node, `\n\n{@example '${filePath}'${region}${lineNums}}\n\n`));
+  const format = extraParams['format'];
+  let linenums = '';
+  if (format === '.') {
+    linenums = ` linenums='false'`;
+  } else if (format) {
+    const [key, value] = format.split(':');
+    if (key === 'linenums') {
+      linenums = ` linenums='${value}'`;
+    }
+  }
+  replace(createTextNode(node, `\n\n{@example '${filePath}'${region}${linenums}}\n\n`));
 };
 
 export const makeTabs: MixinReplacer = (doc, node, params, extraParams, replace) => {
