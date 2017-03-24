@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "start": "ts-node ./node_modules/.bin/dgeni ./index.ts",
-    "test": "mocha -R spec --compilers ts:ts-node/register",
-    "migrate-examples": "node examples-migrator/examples-migrator.js"
+    "start": "yarn migrate-guides && yarn migrate-examples",
+    "migrate-guides": "ts-node ./node_modules/.bin/dgeni ./index.ts",
+    "migrate-examples": "node examples-migrator/examples-migrator.js",
+    "test": "yarn migrate-guides-test",
+    "migrate-guides-test": "mocha -R spec --compilers ts:ts-node/register"
   },
   "repository": {},
   "license": "MIT",
@@ -18,6 +20,7 @@
     "fs-extra": "^2.1.2",
     "glob": "^7.1.1",
     "globby": "^6.1.0",
+    "ignore": "^3.2.6",
     "mkdirp": "^0.5.1",
     "mocha": "^3.2.0",
     "pug-lexer": "^3.0.0",
