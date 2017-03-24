@@ -1,61 +1,60 @@
 const fs = require('fs-extra');
 const globby = require('globby');
+const ignore = require('ignore');
 const path = require('path');
 const shell = require('shelljs');
 
-const EXAMPLES_PATH = path.join(__dirname, '/../../angular/aio/content/examples');
-const OLD_AIO_PATH = path.join(__dirname, '/../../angular.io/public/docs/_examples');
-const E2E_TEST_FILENAME = 'e2e-spec.ts';
+const NEW_EXAMPLES_PATH = path.join(__dirname, '/../../angular/aio/content/examples');
+const OLD_EXAMPLES_PATH = path.join(__dirname, '/../../angular.io/public/docs/_examples');
 
-// Not really to ignore, but they need a different processing
+const EXAMPLES_TO_PROCESS = [
+  '**'
+];
+
 const SPECIAL_EXAMPLES = [
-  'cb-ts-to-js'
-].map(example => {
-  return `${OLD_AIO_PATH}/${example}`;
-});
+  'cb-ts-to-js',
+  '_boilerplate'
+];
+
 const EXAMPLES_TO_IGNORE = [
-  `${OLD_AIO_PATH}/homepage-*`
-]
-.concat(SPECIAL_EXAMPLES)
-.map(e => `!${e}`);
+  `homepage-*`
+];
 
-console.log('Deleting examples...');
-shell.rm('-rf', EXAMPLES_PATH);
+console.log(`Deleting examples from ${NEW_EXAMPLES_PATH}...`);
+shell.rm('-rf', NEW_EXAMPLES_PATH);
 
-let examplesPath = globby.sync([OLD_AIO_PATH + '/*', ...EXAMPLES_TO_IGNORE], { dot: true });
 
-console.log('Copying examples');
-examplesPath.map(example => {
-  const originalPath = example;
-  const name = example.split('/').pop();
-  const isDirectory = fs.lstatSync(example).isDirectory();
+const globPatterns = [
+  ...EXAMPLES_TO_PROCESS,
+  ...EXAMPLES_TO_IGNORE.map(e => `!${e}`)
+];
 
-  if (isDirectory) {
-    // not all examples have a ts folder, for example _boilerplate
-    if (fs.existsSync(path.join(example, '/ts'))) {
-      example = path.join(example, '/ts');
-    }
+console.log('Reading example files from the following glob patterns', globPatterns);
+// Get a list of all the files that match our glob patterns, filtering out folders
+let examplePaths = globby.sync(globPatterns, { cwd: OLD_EXAMPLES_PATH, mark: true, dot: true }).filter(filePath => !/\/$/.test(filePath));
+console.log(`Found ${examplePaths.length} example files.`);
 
-    const dest = path.join(EXAMPLES_PATH, name);
-
-    fs.copySync(example, dest);
-
-    // There are also e2e specs to copy
-    try {
-      fs.copySync(path.join(originalPath, E2E_TEST_FILENAME), path.join(dest, E2E_TEST_FILENAME));
-    } catch (e) {
-    }
-
-  } else {
-    fs.copySync(originalPath, path.join(EXAMPLES_PATH, name));
-  }
+// Transform the paths to the example files
+const pathMap = {};
+examplePaths = examplePaths.map(oldPath => {
+  // remove the ts folder unless it is special example path
+  const newPath = SPECIAL_EXAMPLES.some(special => oldPath.indexOf(special) === 0) ? oldPath : oldPath.replace(/\/ts\//, '/');
+  pathMap[newPath] = oldPath;
+  return newPath;
 });
 
-SPECIAL_EXAMPLES.map(example => {
-  const name = example.split('/').pop();
-  fs.copySync(example, path.join(EXAMPLES_PATH, name));
+// Filter files that would be ignored by our `.gitignore` file
+const gitignore = ignore().add(fs.readFileSync(path.resolve(__dirname, 'gitignore'), 'utf8'));
+examplePaths = gitignore.filter(examplePaths);
+console.log(`Ignoring patterns that match .gitignore rules leaving ${examplePaths.length} example files.`);
+
+console.log('Copying example files');
+examplePaths.forEach(newPath => {
+  fs.ensureDirSync(path.resolve(NEW_EXAMPLES_PATH, path.dirname(newPath)));
+  fs.copySync(path.resolve(OLD_EXAMPLES_PATH, pathMap[newPath]), path.resolve(NEW_EXAMPLES_PATH, newPath));
 });
 
 // Copy our custom gitignore and replace the other one
-const gitignore = fs.readFileSync(path.join(__dirname, 'gitignore'));
-fs.writeFileSync(path.join(EXAMPLES_PATH, '.gitignore'), gitignore);
+console.log('Replacing the .gitignore with our new one.')
+const gitignoreFile = fs.readFileSync(path.join(__dirname, 'gitignore'));
+fs.writeFileSync(path.join(NEW_EXAMPLES_PATH, '.gitignore'), gitignoreFile);
