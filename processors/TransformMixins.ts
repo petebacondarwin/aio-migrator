@@ -34,20 +34,38 @@ export class TransformMixinsProcessor implements Processor {
   }
 }
 
+interface CodeAttributes {
+  path: string;
+  region?: string;
+  title?: string;
+  linenums?: string;
+}
+
 export const makeExample: MixinReplacer = (doc, node, params, extraParams, replace) => {
-  let filePath = computeFilePath(params[0], doc.baseName);
-  const region = (params[1] && params[1] !== 'null') ? ` region='${stripQuotes(params[1])}'` : '';
+  const attributes: CodeAttributes = {
+    path: `"${computeFilePath(params[0], doc.baseName)}"`,
+  };
+
+  if (params[1] && params[1] !== 'null') {
+    attributes.region = `"${stripQuotes(params[1])}"`;
+  }
+
   const format = extraParams['format'];
-  let linenums = '';
-  if (format === '.') {
-    linenums = ` linenums='false'`;
-  } else if (format) {
-    const [key, value] = format.split(':');
-    if (key === 'linenums') {
-      linenums = ` linenums='${value}'`;
+  if (format) {
+    if (format === '.') {
+      attributes.linenums = '"false"';
+    } else {
+      const [key, value] = format.split(':');
+      if (key === 'linenums') {
+        attributes.linenums = `"${value}"`;
+      }
     }
   }
-  replace(createTextNode(node, `\n\n{@example '${filePath}'${region}${linenums}}\n\n`));
+
+  replace([
+    createTextNode(node, '\n'), // need an empty line before the HTML begins for the markdown parser
+    createTagNode(node, 'code-example', attributes as any, [])
+  ]);
 };
 
 export const makeTabs: MixinReplacer = (doc, node, params, extraParams, replace) => {
@@ -55,14 +73,18 @@ export const makeTabs: MixinReplacer = (doc, node, params, extraParams, replace)
   const regions = parseInnerParams(stripQuotes(params[1]));
   const titles = parseInnerParams(stripQuotes(params[2]));
   const tabNodes = files.map((file, index) => {
-    file = computeFilePath(file, doc.baseName);
-    const region = (regions[index] && regions[index] !== 'null') ? ` region='${regions[index]}'` : '';
-    const title = titles[index] || computeTitle(file);
-    return createTagNode(node, 'md-tab', {label: `"${title}"`}, [createTextNode(node, `{@example '${file}'${region}}`)]);
+    const attributes: CodeAttributes = {
+      title: `"${titles[index] || computeTitle(file)}"`,
+      path: `"${computeFilePath(file, doc.baseName)}"`
+    };
+    if (regions[index] && regions[index] !== 'null') {
+      attributes.region = `"${regions[index]}"`;
+    }
+    return createTagNode(node, 'code-pane', attributes as any, []);
   });
   replace([
     createTextNode(node, '\n'), // need an empty line before the HTML begins for the markdown parser
-    createTagNode(node, 'md-tab-group', {}, tabNodes)
+    createTagNode(node, 'code-tabs', {}, tabNodes)
   ]);
 };
 
