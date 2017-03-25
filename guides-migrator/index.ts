@@ -16,6 +16,7 @@ import {MoveCookbookDocsProcessor} from './processors/MoveCookbookDocs';
 import {TransformRelativeLinksProcessor} from './processors/TransformRelativeLinks';
 import {resolve} from 'path';
 import {createTextNode, createTagNode, parseInnerParams} from './processors/utils';
+const { rm } = require('shelljs');
 
 const migratorPackage = new Package('migrator', [])
   .processor(new ReadPugsProcessor())
@@ -37,18 +38,26 @@ const migratorPackage = new Package('migrator', [])
         readPugsProcessor: ReadPugsProcessor,
         readDataFilesProcessor: ReadDataFilesProcessor,
         readContentFilesProcessor: ReadContentFilesProcessor) {
-    const AIO_PROJECT = resolve(__dirname, '../../angular.io');
-    readPugsProcessor.sourcePattern = '{!(api)/!(cheatsheet).jade,!(_*|cheatsheet).jade}';
-    readPugsProcessor.sourceBase = resolve(AIO_PROJECT, 'public/docs/ts/latest');
 
-    readDataFilesProcessor.sourcePattern = resolve(AIO_PROJECT, 'public/docs/ts/latest/!(api)/_data.json');
-    readDataFilesProcessor.sourceBase = resolve(AIO_PROJECT, 'public/docs/ts/latest');
+    const OLD_AIO_PROJECT = resolve(__dirname, '../../angular.io');
+
+    readPugsProcessor.sourcePattern = '{!(api)/!(cheatsheet).jade,!(_*|cheatsheet).jade}';
+    readPugsProcessor.sourceBase = resolve(OLD_AIO_PROJECT, 'public/docs/ts/latest');
+
+    readDataFilesProcessor.sourcePattern = resolve(OLD_AIO_PROJECT, 'public/docs/ts/latest/!(api)/_data.json');
+    readDataFilesProcessor.sourceBase = resolve(OLD_AIO_PROJECT, 'public/docs/ts/latest');
 
     readContentFilesProcessor.sourcePattern = resolve(__dirname, 'content/**/*.{html,md}');
     readContentFilesProcessor.sourceBase = resolve(__dirname, 'content');
   })
   .config(function(writeFilesProcessor: WriteFilesProcessor) {
-    writeFilesProcessor.outputFolder = resolve(__dirname, 'output');
+    const NEW_AIO_PROJECT = resolve(__dirname, '../../angular/aio');
+    writeFilesProcessor.outputFolder = resolve(NEW_AIO_PROJECT, 'content');
+
+    // Clean out the target folders
+    rm('-rf', resolve(NEW_AIO_PROJECT, 'content/guide'));
+    rm('-rf', resolve(NEW_AIO_PROJECT, 'content/tutorial'));
+
   });
 
 module.exports = migratorPackage;
