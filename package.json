@@ -7,7 +7,7 @@
     "migrate-guides": "ts-node ./node_modules/.bin/dgeni ./guides-migrator/index.ts",
     "migrate-examples": "node examples-migrator/examples-migrator.js",
     "test": "yarn migrate-guides-test",
-    "migrate-guides-test": "mocha -R spec --compilers ts:ts-node/register"
+    "migrate-guides-test": "mocha -R spec --compilers ts:ts-node/register guides-migrator/test"
   },
   "repository": {},
   "license": "MIT",

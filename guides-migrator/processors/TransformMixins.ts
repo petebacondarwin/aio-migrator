@@ -1,5 +1,6 @@
 import {DocCollection, Processor} from 'dgeni';
 import {PugDocument} from '../Document';
+import {join} from 'canonical-path';
 import {parseArgs, parseInnerParams, createTagNode, createTextNode, stripQuotes} from './utils';
 import * as pug from '../pug-interfaces';
 const walk = require('pug-walk');
@@ -99,7 +100,7 @@ const PATH_TRANSFORM_EXCEPTIONS = [/cb-ts-to-js\/(js|ts)/];
 function computeFilePath(filePath, exampleName) {
   filePath = stripQuotes(filePath);
   if (isProjRelDir(filePath, exampleName)) {
-    filePath = exampleName + filePath;
+    filePath = join(exampleName, filePath);
   }
   if (PATH_TRANSFORM_EXCEPTIONS.some(pattern => pattern.test(filePath))) {
     return filePath;
