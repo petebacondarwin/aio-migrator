@@ -257,6 +257,18 @@ describe('migrator', () => {
     ));
   });
 
+  it('should remove jade "block" markers', () => {
+    expect(docs['remove-block.jade']).to.equal(_(
+      'before',
+      '',
+      '<div>',
+      '  block contents',
+      '</div>',
+      '',
+      'after',
+    ));
+  });
+
 });
 
 function _(...lines) {

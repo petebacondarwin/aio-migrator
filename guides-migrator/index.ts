@@ -14,6 +14,7 @@ import {TransformMixinsProcessor, makeExample, makeTabs, makeExcerpt} from './pr
 import {TransformImagePathsProcessor} from './processors/TransformImagePaths';
 import {MoveCookbookDocsProcessor} from './processors/MoveCookbookDocs';
 import {TransformRelativeLinksProcessor} from './processors/TransformRelativeLinks';
+import {RemoveBlockMarkersProcessor} from './processors/RemoveBlockMarkers';
 import {resolve} from 'path';
 import {createTextNode, createTagNode, parseInnerParams} from './processors/utils';
 const { rm } = require('shelljs');
@@ -25,6 +26,7 @@ const migratorPackage = new Package('migrator', [])
   .processor(new TransformAnchorsProcessor())
   .processor(new TransformComponentsProcessor(['alert', 's-rule', 'callout', 'l-sub-section']))
   .processor(new RemoveDivsProcessor(['l-main-section']))
+  .processor(new RemoveBlockMarkersProcessor())
   .processor(new TransformFileTreesProcessor())
   .processor(new ExtractFilterContentsProcessor(['marked']))
   .processor(new TransformMixinsProcessor({makeExample, makeTabs, makeExcerpt}))
