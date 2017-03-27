@@ -10,7 +10,7 @@ import {TransformComponentsProcessor} from './processors/TransformComponents';
 import {RemoveDivsProcessor} from './processors/RemoveDivs';
 import {TransformFileTreesProcessor} from './processors/TransformFileTrees';
 import {ExtractFilterContentsProcessor} from './processors/ExtractFilterContents';
-import {TransformMixinsProcessor, makeExample, makeTabs} from './processors/TransformMixins';
+import {TransformMixinsProcessor, makeExample, makeTabs, makeExcerpt} from './processors/TransformMixins';
 import {TransformImagePathsProcessor} from './processors/TransformImagePaths';
 import {MoveCookbookDocsProcessor} from './processors/MoveCookbookDocs';
 import {TransformRelativeLinksProcessor} from './processors/TransformRelativeLinks';
@@ -27,7 +27,7 @@ const migratorPackage = new Package('migrator', [])
   .processor(new RemoveDivsProcessor(['l-main-section']))
   .processor(new TransformFileTreesProcessor())
   .processor(new ExtractFilterContentsProcessor(['marked']))
-  .processor(new TransformMixinsProcessor({makeExample, makeTabs}))
+  .processor(new TransformMixinsProcessor({makeExample, makeTabs, makeExcerpt}))
   .processor(new RenderASTProcessor())
   .processor(new TransformImagePathsProcessor())
   .processor(new AttachMetaDataProcessor())

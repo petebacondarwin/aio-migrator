@@ -89,6 +89,29 @@ export const makeTabs: MixinReplacer = (doc, node, params, extraParams, replace)
   ]);
 };
 
+export const makeExcerpt: MixinReplacer = (doc, node, params, extraParams, replace) => {
+  const matches = params[0].match(/(.*?)(?:\s+\(([^\)]*)\))?$/);
+
+  const examplePath = matches[1];
+  const parenthesis = matches[2];
+  const region = (params[1] && params[1] !== 'null') ? stripQuotes(params[1]) : parenthesis;
+
+  const attributes: CodeAttributes = {
+    path: `"${computeFilePath(examplePath, doc.baseName)}"`,
+    linenums: '"false"',
+    title: `"${computeTitle(examplePath)} (${parenthesis || region || 'excerpt'})"`
+  };
+
+  if (region) {
+    attributes.region = `"${region}"`;
+  }
+
+  replace([
+    createTextNode(node, '\n'), // need an empty line before the HTML begins for the markdown parser
+    createTagNode(node, 'code-example', attributes as any, [])
+  ]);
+};
+
 
 const PATH_TRANSFORM_EXCEPTIONS = [/cb-ts-to-js\/(js|ts)/];
 
