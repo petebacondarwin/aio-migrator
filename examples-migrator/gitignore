@@ -23,7 +23,6 @@ protractor-helpers.js
 dist/
 
 # special
-!_boilerplate/
 !/*
 !systemjs.config.*.js
 !*.1.*
