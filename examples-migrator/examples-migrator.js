@@ -4,6 +4,7 @@ const ignore = require('ignore');
 const path = require('path');
 const shell = require('shelljs');
 
+const BOILERPLATE_PATH = path.join(__dirname, '/../../angular/aio/tools/examples/shared');
 const NEW_EXAMPLES_PATH = path.join(__dirname, '/../../angular/aio/content/examples');
 const OLD_EXAMPLES_PATH = path.join(__dirname, '/../../angular.io/public/docs/_examples');
 
@@ -12,21 +13,32 @@ const EXAMPLES_TO_PROCESS = [
 ];
 
 const SPECIAL_EXAMPLES = [
-  'cb-ts-to-js',
-  '_boilerplate'
+  'cb-ts-to-js'
 ];
 
-const EXAMPLES_TO_IGNORE = [
-  `homepage-*`
+const EXAMPLES_TO_DELETE = [
+  'homepage-*/**',
+];
+
+const FILES_TO_IGNORE = [
+  '_boilerplate/**',
+  'jsconfig.json',
+  'package.json',
+  'protractor-helpers.ts',
+  'protractor.config.js',
+  'tsconfig.json'
 ];
 
 console.log(`Deleting examples from ${NEW_EXAMPLES_PATH}...`);
 shell.rm('-rf', NEW_EXAMPLES_PATH);
+console.log(`Deleting examples from ${BOILERPLATE_PATH}...`);
+shell.rm('-rf', BOILERPLATE_PATH);
 
 
 const globPatterns = [
   ...EXAMPLES_TO_PROCESS,
-  ...EXAMPLES_TO_IGNORE.map(e => `!${e}`)
+  ...EXAMPLES_TO_DELETE.map(e => `!${e}`),
+  ...FILES_TO_IGNORE.map(e => `!${e}`)
 ];
 
 console.log('Reading example files from the following glob patterns', globPatterns);
@@ -54,7 +66,15 @@ examplePaths.forEach(newPath => {
   fs.copySync(path.resolve(OLD_EXAMPLES_PATH, pathMap[newPath]), path.resolve(NEW_EXAMPLES_PATH, newPath));
 });
 
-// Copy our custom gitignore and replace the other one
+// Move the boilerplate to the tools folder
+let boilerplate = globby.sync(FILES_TO_IGNORE, { cwd: OLD_EXAMPLES_PATH, dot: true });
+boilerplate.forEach(oldPath => {
+  const newPath = (oldPath.startsWith('_')) ? oldPath.substr(1) : oldPath;
+  fs.ensureDirSync(path.resolve(BOILERPLATE_PATH, path.dirname(newPath)));
+  fs.copySync(path.resolve(OLD_EXAMPLES_PATH, oldPath), path.resolve(BOILERPLATE_PATH, newPath));
+});
+
+// // Copy our custom gitignore and replace the other one
 console.log('Replacing the .gitignore with our new one.')
 const gitignoreFile = fs.readFileSync(path.join(__dirname, 'gitignore'));
 fs.writeFileSync(path.join(NEW_EXAMPLES_PATH, '.gitignore'), gitignoreFile);
