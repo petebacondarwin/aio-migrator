@@ -27,7 +27,7 @@
     "pug-parser": "^2.0.2",
     "pug-walk": "^1.1.1",
     "shelljs": "^0.7.7",
-    "ts-node": "^2.1.0",
+    "ts-node": "^3.0.2",
     "tslint": "^4.4.2",
     "typescript": "^2.1.6"
   }
