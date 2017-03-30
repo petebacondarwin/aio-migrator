@@ -29,7 +29,7 @@ function renderAST(doc: PugDocument) {
         break;
       case 'Tag':
         const tagNode = node as pug.Tag;
-        if (!tagNode.isInline) { output.push('\n'); }
+        if (!tagNode.isInline) { output.push('\n\n'); }
         output.push(`${makeIndent(indent)}<${tagNode.name}`);
         tagNode.attrs.forEach((attr: pug.Attribute) => {
           output.push(` ${attr.name}=${attr.val}`);
