@@ -12,7 +12,7 @@ import {TransformFileTreesProcessor} from './processors/TransformFileTrees';
 import {ExtractFilterContentsProcessor} from './processors/ExtractFilterContents';
 import {TransformMixinsProcessor, makeExample, makeTabs, makeExcerpt} from './processors/TransformMixins';
 import {TransformImagePathsProcessor} from './processors/TransformImagePaths';
-import {MoveCookbookDocsProcessor} from './processors/MoveCookbookDocs';
+import {MoveDocsProcessor} from './processors/MoveDocs';
 import {TransformRelativeLinksProcessor} from './processors/TransformRelativeLinks';
 import {RemoveBlockMarkersProcessor} from './processors/RemoveBlockMarkers';
 import {resolve} from 'path';
@@ -33,7 +33,7 @@ const migratorPackage = new Package('migrator', [])
   .processor(new RenderASTProcessor())
   .processor(new TransformImagePathsProcessor())
   .processor(new AttachMetaDataProcessor())
-  .processor(new MoveCookbookDocsProcessor())
+  .processor(new MoveDocsProcessor())
   .processor(new TransformRelativeLinksProcessor())
   .processor(new WriteFilesProcessor())
   .config(function(
@@ -43,7 +43,7 @@ const migratorPackage = new Package('migrator', [])
 
     const OLD_AIO_PROJECT = resolve(__dirname, '../../angular.io');
 
-    readPugsProcessor.sourcePattern = '{!(api)/!(cheatsheet).jade,!(_*|cheatsheet).jade}';
+    readPugsProcessor.sourcePattern = '{!(api)/!(cheatsheet).jade,{*quickstart,glossary}.jade}';
     readPugsProcessor.sourceBase = resolve(OLD_AIO_PROJECT, 'public/docs/ts/latest');
 
     readDataFilesProcessor.sourcePattern = resolve(OLD_AIO_PROJECT, 'public/docs/ts/latest/!(api)/_data.json');
