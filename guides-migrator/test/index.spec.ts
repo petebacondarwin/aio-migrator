@@ -88,6 +88,7 @@ describe('migrator', () => {
 
   it('should remove and unindent `:marked` blocks', () => {
     expect(docs['remove-marked.jade']).to.equal(_(
+      '',
       '# heading 1',
       '',
       'a paragraph',
@@ -235,9 +236,10 @@ describe('migrator', () => {
 
   it('should fix paths to relative links', () => {
     expect(docs['guide/transform-relative-links.jade']).to.equal(_(
-     '[guide 1](guide/guide-1)',
-     '[tutorial 1](tutorial/tutorial-1)',
-     '[internal link](guide/transform-relative-links#fragment)'
+      '',
+      '[guide 1](guide/guide-1)',
+      '[tutorial 1](tutorial/tutorial-1)',
+      '[internal link](guide/transform-relative-links#fragment)'
     ));
   });
 
@@ -268,6 +270,23 @@ describe('migrator', () => {
     ));
   });
 
+  it('should transform horizontal rule markers', () => {
+    expect(docs['transform-horizontal-rules.jade']).to.equal(_(
+      '',
+      '',
+      '---',
+      '',
+      'Some paragraph',
+      '',
+      '--- {.l}',
+      '',
+      'another paragraph',
+      '',
+      '--- {.hr-margin}',
+      '',
+      ''
+    ));
+  });
 });
 
 function _(...lines) {
