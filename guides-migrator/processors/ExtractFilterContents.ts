@@ -18,6 +18,7 @@ export class ExtractFilterContentsProcessor implements Processor {
             const filterNode = node as pug.Filter;
             if (this.matchFilters.some(filter => filter === filterNode.name)) {
               replace([
+                createTextNode(node, '\n'),
                 ...filterNode.block.nodes,
               ]);
             }
