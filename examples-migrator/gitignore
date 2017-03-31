@@ -21,6 +21,7 @@ protractor-helpers.js
 **/ts/**/*.js
 **/js-es6*/**/*.js
 dist/
+plnkr.no-link.html
 
 # special
 !/*
