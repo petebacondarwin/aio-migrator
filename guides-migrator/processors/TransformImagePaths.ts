@@ -7,7 +7,9 @@ export class TransformImagePathsProcessor implements Processor {
   $process(docs: DocCollection) {
     docs.forEach((doc: PugDocument) => {
       if (doc.renderedAST) {
-        doc.renderedAST = doc.renderedAST.replace(/\/resources\/images\//g, 'assets/images/');
+        doc.renderedAST = doc.renderedAST
+          .replace(/https:\/\/raw\.githubusercontent\.com\/angular\/angular\.io\/master\/public\/resources\/images\//g, 'assets/images/')
+          .replace(/\/resources\/images\//g, 'assets/images/');
       }
     });
   }

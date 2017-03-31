@@ -231,7 +231,9 @@ describe('migrator', () => {
 
   it('should fix paths to images', () => {
     expect(docs['transform-image-paths.jade']).to.equal(_(
-      '<img src="assets/images/devguide/attribute-directives/first-highlight.png" alt="First Highlight"></img>',
+      '<img src="assets/images/devguide/attribute-directives/first-highlight.png" alt="First Highlight"></img>' +
+      '<a href="assets/images/logos/angular/angular.png" target="_blank">',
+      '<img src="assets/images/logos/angular/angular.png" height="40px" title="download Angular logo"></a>',
     ));
   });
 
