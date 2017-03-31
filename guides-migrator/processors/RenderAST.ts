@@ -18,6 +18,7 @@ export class RenderASTProcessor implements Processor {
 function renderAST(doc: PugDocument) {
   let output = [];
   let indent = 0;
+  let ancestors: pug.Node[] = [];
   walk(doc.ast, (node: pug.Node, replace: Function) => {
     switch (node.type) {
       case 'Block':
@@ -29,15 +30,31 @@ function renderAST(doc: PugDocument) {
         break;
       case 'Tag':
         const tagNode = node as pug.Tag;
-        if (!tagNode.isInline) { output.push('\n\n'); }
+        if (!tagNode.isInline) {
+          output.push('\n');
+          if (ancestors.every(ancestor => ancestor.type !== 'Tag')) {
+            // we are entering an HTML tag that is not already a descendent of a tag, so we must add
+            // an additional newline to prevent the markdown from being invalid
+            output.push('\n');
+          }
+        }
         output.push(`${makeIndent(indent)}<${tagNode.name}`);
         tagNode.attrs.forEach((attr: pug.Attribute) => {
           output.push(` ${attr.name}=${attr.val}`);
         });
-        output.push(tagNode.selfClosing ? '/>' : '>');
-        if (!tagNode.isInline) {
-          output.push('\n');
-          indent += 2;
+        if (tagNode.selfClosing) {
+          output.push('/>');
+          if (ancestors.every(ancestor => ancestor.type !== 'Tag')) {
+            // we are leaving a self closing HTML tag that is not already a descendent of a tag, so we
+            // must add an additional newline to prevent the markdown from being invalid
+            output.push('\n');
+          }
+        } else {
+          output.push('>');
+          if (!tagNode.isInline) {
+            output.push('\n');
+            indent += 2;
+          }
         }
         break;
       case 'Code':
@@ -49,7 +66,13 @@ function renderAST(doc: PugDocument) {
         replace([]);
         break;
     }
+    if ((node as any).nodes || (node as any).block) {
+      ancestors.push(node);
+    }
   }, (node: pug.Node) => {
+    if ((node as any).nodes || (node as any).block) {
+      ancestors.pop();
+    }
     switch (node.type) {
       case 'Tag':
         const tagNode = node as pug.Tag;
@@ -61,7 +84,12 @@ function renderAST(doc: PugDocument) {
           output.push(`${makeIndent(indent)}</${tagNode.name}>`);
         }
         if (!tagNode.isInline) {
-          output.push('\n\n');
+          output.push('\n');
+          if (ancestors.every(ancestor => ancestor.type !== 'Tag')) {
+            // we are leaving an HTML tag that is not already a descendent of a tag, so we must add
+            // an additional newline to prevent the markdown from being invalid
+            output.push('\n');
+          }
         }
       case 'Code':
         const codeNode = node as pug.Code;

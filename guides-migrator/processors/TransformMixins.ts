@@ -64,7 +64,6 @@ export const makeExample: MixinReplacer = (doc, node, params, extraParams, repla
   }
 
   replace([
-    createTextNode(node, '\n'), // need an empty line before the HTML begins for the markdown parser
     createTagNode(node, 'code-example', attributes as any, [])
   ]);
 };
@@ -84,7 +83,6 @@ export const makeTabs: MixinReplacer = (doc, node, params, extraParams, replace)
     return createTagNode(node, 'code-pane', attributes as any, []);
   });
   replace([
-    createTextNode(node, '\n'), // need an empty line before the HTML begins for the markdown parser
     createTagNode(node, 'code-tabs', {}, tabNodes)
   ]);
 };
@@ -107,7 +105,6 @@ export const makeExcerpt: MixinReplacer = (doc, node, params, extraParams, repla
   }
 
   replace([
-    createTextNode(node, '\n'), // need an empty line before the HTML begins for the markdown parser
     createTagNode(node, 'code-example', attributes as any, [])
   ]);
 };

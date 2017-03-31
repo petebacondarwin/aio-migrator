@@ -129,22 +129,22 @@ describe('migrator', () => {
       'some text', '',
       '<code-tabs>', '',
       '  <code-pane title="src/app/some.component.ts" path="cb-component-relative-paths/src/app/some.component.ts">', '',
-      '  </code-pane>', '', '',
+      '  </code-pane>', '',
       '  <code-pane title="src/app/some.component.html" path="cb-component-relative-paths/src/app/some.component.html">', '',
-      '  </code-pane>', '', '',
+      '  </code-pane>', '',
       '  <code-pane title="src/app/some.component.css" path="cb-component-relative-paths/src/app/some.component.css">', '',
-      '  </code-pane>', '', '',
+      '  </code-pane>', '',
       '  <code-pane title="src/app/app.component.ts" path="cb-component-relative-paths/src/app/app.component.ts">', '',
-      '  </code-pane>', '', '',
+      '  </code-pane>', '',
       '</code-tabs>', '',
       'more text', '',
       '<code-tabs>', '',
       '  <code-pane title="src/app/some.component.ts" path="cb-component-relative-paths/src/app/some.component.ts" region="region-1">', '',
-      '  </code-pane>', '', '',
+      '  </code-pane>', '',
       '  <code-pane title="src/app/some.component.html" path="cb-component-relative-paths/src/app/some.component.html">', '',
-      '  </code-pane>', '', '',
+      '  </code-pane>', '',
       '  <code-pane title="src/app/app.component.ts" path="cb-component-relative-paths/src/app/app.component.ts" region="region-2">', '',
-      '  </code-pane>', '', '',
+      '  </code-pane>', '',
       '</code-tabs>', '', ''
       ));
   });
@@ -196,6 +196,7 @@ describe('migrator', () => {
   it('should transform .filetree structures to HTML', () => {
     expect(docs['transform-filetrees.jade']).to.equal(_(
       '',
+      '',
       '<aio-filetree>',
       '',
       '  <aio-folder>',
@@ -204,24 +205,19 @@ describe('migrator', () => {
       '      some.component.css',
       '    </aio-file>',
       '',
-      '',
       '    <aio-file>',
       '      some.component.html',
       '    </aio-file>',
-      '',
       '',
       '    <aio-file>',
       '      some.component.ts',
       '    </aio-file>',
       '',
-      '',
       '  </aio-folder>',
-      '',
       '',
       '  <aio-file>',
       '    ...',
       '  </aio-file>',
-      '',
       '',
       '</aio-filetree>',
       '',
@@ -247,21 +243,22 @@ describe('migrator', () => {
 
   it('should move cookbook docs to the guide folder, renaming if necessary', () => {
     expect(docs['guide/test.jade']).to.equal(_(
-      '\n<h1>\n  Some text\n</h1>\n\n'
+      '\n\n<h1>\n  Some text\n</h1>\n\n'
     ));
 
     expect(docs['guide/exists.jade']).to.equal(_(
-      '\n<h1>\n  guide\n</h1>\n\n'
+      '\n\n<h1>\n  guide\n</h1>\n\n'
     ));
 
     expect(docs['guide/cb-exists.jade']).to.equal(_(
-      '\n<h1>\n  cookbook\n</h1>\n\n'
+      '\n\n<h1>\n  cookbook\n</h1>\n\n'
     ));
   });
 
   it('should remove jade "block" markers', () => {
     expect(docs['remove-block.jade']).to.equal(_(
       'before',
+      '',
       '',
       '<div>',
       '  block contents',
