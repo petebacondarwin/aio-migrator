@@ -3,7 +3,7 @@ import {Block} from '../pug-interfaces';
 import {ContentDocument} from '../Document';
 
 import {readFileSync} from 'fs';
-import {resolve, relative, basename, extname} from 'path';
+import {resolve, relative, basename, extname} from 'canonical-path';
 const glob = require('glob');
 
 export class ReadContentFilesProcessor implements Processor {

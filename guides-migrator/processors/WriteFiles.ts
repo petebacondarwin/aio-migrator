@@ -1,7 +1,7 @@
 import {DocCollection, Processor} from 'dgeni';
 import {PugDocument, ContentDocument} from '../Document';
 import {writeFileSync} from 'fs';
-import {resolve, dirname} from 'path';
+import {resolve, dirname} from 'canonical-path';
 const {sync: mkdirp} = require('mkdirp');
 
 export class WriteFilesProcessor implements Processor {

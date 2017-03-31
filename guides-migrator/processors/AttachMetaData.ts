@@ -1,6 +1,6 @@
 import {DocCollection, Processor} from 'dgeni';
 import {ContentDocument, Document, DataDocument} from '../Document';
-import {join, dirname} from 'path';
+import {join, dirname} from 'canonical-path';
 
 export class AttachMetaDataProcessor implements Processor {
   name = 'attachMetaDataProcessor';

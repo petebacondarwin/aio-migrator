@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 const globby = require('globby');
 const ignore = require('ignore');
-const path = require('path');
+const path = require('canonical-path');
 const shell = require('shelljs');
 
 const BOILERPLATE_PATH = path.join(__dirname, '/../../angular/aio/tools/examples/shared');

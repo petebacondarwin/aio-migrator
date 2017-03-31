@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
 
-import {resolve} from 'path';
+import {resolve} from 'canonical-path';
 import {Dgeni, Package, Processor, DocCollection} from 'dgeni';
 import {WriteFilesProcessor} from '../processors/WriteFiles';
 import {ReadPugsProcessor} from '../processors/ReadPugs';

@@ -1,7 +1,7 @@
 import {DocCollection, Processor} from 'dgeni';
 import {DataDocument} from '../Document';
 
-import {resolve, relative, basename, extname} from 'path';
+import {resolve, relative, basename, extname} from 'canonical-path';
 const glob = require('glob');
 
 export class ReadDataFilesProcessor implements Processor {

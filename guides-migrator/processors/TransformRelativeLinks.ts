@@ -1,6 +1,6 @@
 import {DocCollection, Processor} from 'dgeni';
 import {PugDocument} from '../Document';
-import {dirname, join} from 'path';
+import {dirname, join} from 'canonical-path';
 
 export class TransformRelativeLinksProcessor implements Processor {
   name = 'transformRelativeLinksProcessor';

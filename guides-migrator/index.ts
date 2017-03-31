@@ -15,7 +15,7 @@ import {TransformImagePathsProcessor} from './processors/TransformImagePaths';
 import {MoveDocsProcessor} from './processors/MoveDocs';
 import {TransformRelativeLinksProcessor} from './processors/TransformRelativeLinks';
 import {RemoveBlockMarkersProcessor} from './processors/RemoveBlockMarkers';
-import {resolve} from 'path';
+import {resolve} from 'canonical-path';
 import {createTextNode, createTagNode, parseInnerParams} from './processors/utils';
 const { rm } = require('shelljs');
 

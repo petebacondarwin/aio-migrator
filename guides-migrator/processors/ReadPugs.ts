@@ -3,7 +3,7 @@ import {Block} from '../pug-interfaces';
 import {PugDocument} from '../Document';
 
 import {readFileSync} from 'fs';
-import {resolve, relative, basename, extname} from 'path';
+import {resolve, relative, basename, extname} from 'canonical-path';
 const glob = require('glob');
 const lex = require('pug-lexer');
 const parse = require('pug-parser');
