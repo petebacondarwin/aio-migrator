@@ -22,3 +22,9 @@
 
 </code-example>
 
+
+
+<code-example path="cb-i18n/src/locale/messages.es.xlf.html" region="translated-hello" title="src/locale/messages.es.xlf (&lt;trans-unit&gt;)" linenums="false">
+
+</code-example>
+

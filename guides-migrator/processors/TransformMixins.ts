@@ -1,6 +1,6 @@
 import {DocCollection, Processor} from 'dgeni';
-import {PugDocument} from '../Document';
 import {join} from 'canonical-path';
+import {PugDocument} from '../Document';
 import {parseArgs, parseInnerParams, createTagNode, createTextNode, stripQuotes} from './utils';
 import * as pug from '../pug-interfaces';
 const walk = require('pug-walk');
@@ -52,7 +52,7 @@ export const makeExample: MixinReplacer = (doc, node, params, extraParams, repla
   }
 
   if (params[2] && params[2] !== 'null') {
-    attributes.title = `"${stripQuotes(params[2])}"`;
+    attributes.title = `"${encodeHTML(stripQuotes(params[2]))}"`;
   }
 
   const format = extraParams['format'];
@@ -78,7 +78,7 @@ export const makeTabs: MixinReplacer = (doc, node, params, extraParams, replace)
   const titles = parseInnerParams(stripQuotes(params[2]));
   const tabNodes = files.map((file, index) => {
     const attributes: CodeAttributes = {
-      title: `"${titles[index] || computeTitle(file)}"`,
+      title: `"${encodeHTML(titles[index] || computeTitle(file))}"`,
       path: `"${computeFilePath(file, doc.baseName)}"`
     };
     if (regions[index] && regions[index] !== 'null') {
@@ -101,7 +101,7 @@ export const makeExcerpt: MixinReplacer = (doc, node, params, extraParams, repla
   const attributes: CodeAttributes = {
     path: `"${computeFilePath(examplePath, doc.baseName)}"`,
     linenums: '"false"',
-    title: `"${computeTitle(examplePath)} (${parenthesis || region || 'excerpt'})"`
+    title: `"${encodeHTML(computeTitle(examplePath))} (${encodeHTML(parenthesis || region || 'excerpt')})"`
   };
 
   if (region) {
@@ -149,3 +149,8 @@ function isProjRelDir(path, baseName) {
   // TODO: generalize: compare start with getExampleName(); which needs to be fixed.
 }
 
+function encodeHTML(text) {
+  return text
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+}
