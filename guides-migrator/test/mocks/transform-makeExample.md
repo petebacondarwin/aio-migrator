@@ -10,6 +10,12 @@ some text
 
 </code-example>
 
+
+
+<code-example path="transform-makeExample/src/app/some.component.ts" region="module-id" title="this is a title">
+
+</code-example>
+
 more text
 
 <code-example path="cb-ts-to-js/ts/src/app/some.component.ts" region="module-id" linenums="15">

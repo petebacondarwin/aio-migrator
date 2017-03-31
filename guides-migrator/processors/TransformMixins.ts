@@ -51,6 +51,10 @@ export const makeExample: MixinReplacer = (doc, node, params, extraParams, repla
     attributes.region = `"${stripQuotes(params[1])}"`;
   }
 
+  if (params[2] && params[2] !== 'null') {
+    attributes.title = `"${stripQuotes(params[2])}"`;
+  }
+
   const format = extraParams['format'];
   if (format) {
     if (format === '.') {
