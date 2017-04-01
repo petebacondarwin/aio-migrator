@@ -4,7 +4,7 @@
 
 Some paragraph
 
---- {.l}
+--- {.hr-margin}
 
 another paragraph
 

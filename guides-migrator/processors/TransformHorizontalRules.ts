@@ -15,8 +15,8 @@ export class TransformHorizontalRuleProcessor implements Processor {
           if (node.type === 'Tag') {
             const tagNode = node as pug.Tag;
             const cssClasses = collectClasses(tagNode);
-            if (cssClasses['hr']) {
-              delete cssClasses['hr'];
+            if (cssClasses['l-hr']) {
+              delete cssClasses['l-hr'];
               let classString = Object.keys(cssClasses).map(c => '.' + c).join('');
               if (classString.length) {
                 classString =  ` {${classString}}`;
