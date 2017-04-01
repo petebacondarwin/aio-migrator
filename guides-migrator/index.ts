@@ -5,7 +5,7 @@ import {ReadContentFilesProcessor} from './processors/ReadContentFiles';
 import {RenderASTProcessor} from './processors/RenderAST';
 import {AttachMetaDataProcessor} from './processors/AttachMetaData';
 import {WriteFilesProcessor} from './processors/WriteFiles';
-import {TransformAnchorsProcessor} from './processors/TransformAnchors';
+import {TransformJadeAnchorsProcessor} from './processors/TransformJadeAnchors';
 import {TransformHorizontalRuleProcessor} from './processors/TransformHorizontalRules';
 import {TransformComponentsProcessor} from './processors/TransformComponents';
 import {RemoveDivsProcessor} from './processors/RemoveDivs';
@@ -24,7 +24,7 @@ const migratorPackage = new Package('migrator', [])
   .processor(new ReadPugsProcessor())
   .processor(new ReadDataFilesProcessor())
   .processor(new ReadContentFilesProcessor())
-  .processor(new TransformAnchorsProcessor())
+  .processor(new TransformJadeAnchorsProcessor())
   .processor(new TransformHorizontalRuleProcessor())
   .processor(new TransformComponentsProcessor(['alert', 's-rule', 'callout', 'l-sub-section']))
   .processor(new RemoveDivsProcessor(['l-main-section']))

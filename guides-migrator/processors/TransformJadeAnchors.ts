@@ -4,8 +4,8 @@ import * as pug from '../pug-interfaces';
 import {createTextNode, stripQuotes} from './utils';
 const walk = require('pug-walk');
 
-export class TransformAnchorsProcessor implements Processor {
-  name = 'transformAnchorsProcessor';
+export class TransformJadeAnchorsProcessor implements Processor {
+  name = 'transformJadeAnchorsProcessor';
   $before = ['renderASTProcessor'];
 
   $process(docs: DocCollection) {
