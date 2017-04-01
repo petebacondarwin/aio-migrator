@@ -15,6 +15,7 @@ import {TransformMixinsProcessor, makeExample, makeTabs, makeExcerpt} from './pr
 import {TransformImagePathsProcessor} from './processors/TransformImagePaths';
 import {MoveDocsProcessor} from './processors/MoveDocs';
 import {TransformRelativeLinksProcessor} from './processors/TransformRelativeLinks';
+import {TransformHtmlAnchorsProcessor} from './processors/TransformHtmlAnchors';
 import {RemoveBlockMarkersProcessor} from './processors/RemoveBlockMarkers';
 import {resolve} from 'canonical-path';
 import {createTextNode, createTagNode, parseInnerParams} from './processors/utils';
@@ -37,6 +38,7 @@ const migratorPackage = new Package('migrator', [])
   .processor(new AttachMetaDataProcessor())
   .processor(new MoveDocsProcessor())
   .processor(new TransformRelativeLinksProcessor())
+  .processor(new TransformHtmlAnchorsProcessor())
   .processor(new WriteFilesProcessor())
   .config(function(
         readPugsProcessor: ReadPugsProcessor,
