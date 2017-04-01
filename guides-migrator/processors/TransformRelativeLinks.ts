@@ -8,13 +8,29 @@ export class TransformRelativeLinksProcessor implements Processor {
   $process(docs: DocCollection) {
     docs.forEach((doc: PugDocument) => {
       if (doc.renderedAST) {
-        doc.renderedAST = doc.renderedAST.replace(/(\[[^\]]+\])\(([^)]+)\)/g, (_, title, url) => {
-          if (url[0] === '#') {
-            url = stripExtension(doc.relativePath) + url;
-          } else if (!isAbsolute(url)) {
-            url = join(dirname(doc.relativePath), stripExtension(url));
+        doc.renderedAST = doc.renderedAST.replace(/(\[[^\]]+\])\(([^)]+)\)/g, (_, title, rest) => {
+          let newUrl;
+
+          const [url, tooltip] = rest.split(' ');
+          const [path, hash] = url.split('#');
+
+          if (isAbsolute(path)) {
+            newUrl = path;
+          } else if (!path) {
+            newUrl = stripExtension(doc.relativePath);
+          } else {
+            newUrl = join(dirname(doc.relativePath), stripExtension(path));
           }
-          return `${title}(${url})`;
+
+          if (hash) {
+            newUrl = `${newUrl}#${hash}`;
+          }
+
+          if (tooltip) {
+            newUrl = `${newUrl} ${tooltip}`;
+          }
+
+          return `${title}(${newUrl})`;
         });
       }
     });
@@ -29,3 +45,7 @@ function stripExtension(url: string) {
 function isAbsolute(url: string) {
   return /^[a-z]+:\/\/|^\/\/|^\//i.test(url);
 }
+
+
+
+// relative links between pages
