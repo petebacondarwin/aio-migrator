@@ -98,6 +98,10 @@ describe('migrator', () => {
   it('should transform horizontal rule markers', () => {
     expect(docs['transform-horizontal-rules.jade']).to.equal(readFile('transform-horizontal-rules.md'));
   });
+
+  it('should render jade with correct indentation', () => {
+    expect(docs['render-ast.jade']).to.equal(readFile('render-ast.md'));
+  });
 });
 
 function readFile(filePath) {
