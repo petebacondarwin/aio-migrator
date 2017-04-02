@@ -11,7 +11,7 @@ export class TransformRelativeLinksProcessor implements Processor {
         doc.renderedAST = doc.renderedAST.replace(/(\[[^\]]+\])\(([^)]+)\)/g, (_, title, rest) => {
           let newUrl;
 
-          const [url, tooltip] = rest.split(' ');
+          const [__, url, tooltip] = rest.match(/(\S+)(?: (.+))?/);
           const [path, hash] = url.split('#');
 
           if (isAbsolute(path)) {

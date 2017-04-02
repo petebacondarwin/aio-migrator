@@ -5,3 +5,4 @@
 [tutorial 1](tutorial/tutorial-1#some-hash)
 [tutorial 2](tutorial/tutorial-2)
 [internal link](guide/transform-relative-links#fragment)
+[guide 2](guide/guide-2 "some tooltip with spaces")
