@@ -1,4 +1,5 @@
 import * as pug from '../pug-interfaces';
+import {join} from 'canonical-path';
 
 export function collectClasses(tagNode: pug.Tag): Object {
   const cssClasses = {};
@@ -65,8 +66,6 @@ enum ParseState {
 export function parseArgs(argString: string) {
   let state: ParseState = ParseState.beforeArgument;
   let stringType: string;
-  let inArgument: boolean = false;
-  let inString: boolean = false;
   let index = 0;
   let startArgIndex;
   let endArgIndex;
@@ -101,7 +100,7 @@ export function parseArgs(argString: string) {
       case ParseState.inArgument:
         if (char === ',') {
           // exit argument
-          saveArg();
+          saveArg(true);
           state = ParseState.afterComma;
         } else {
           // inside a non-quoted argument
@@ -141,13 +140,19 @@ export function parseArgs(argString: string) {
       state === ParseState.afterString ||
       state === ParseState.afterComma) {
     // capture last argument
-    saveArg();
+    saveArg(state === ParseState.inArgument);
   }
 
-  return args.map(arg => arg.trim());
+  return args.map(arg => arg && arg.trim());
 
-  function saveArg() {
-    args.push(argString.substring(startArgIndex, endArgIndex + 1));
+  function saveArg(unquoted = false) {
+    let arg = argString.substring(startArgIndex, endArgIndex + 1);
+    if (unquoted) {
+      arg = (arg === 'null') ? null :
+            (arg === 'undefined') ? undefined :
+            arg;
+    }
+    args.push(arg);
     startArgIndex = index + 1;
     endArgIndex = index + 1;
   }
@@ -155,4 +160,52 @@ export function parseArgs(argString: string) {
 
 export function parseInnerParams(paramString: string) {
   return (paramString === null) ? [] : parseArgs(paramString);
+}
+
+export interface CodeAttributes {
+  path: string;
+  region?: string;
+  title?: string;
+  linenums?: string;
+}
+
+const PATH_TRANSFORM_EXCEPTIONS = [/cb-ts-to-js\/(js|ts)/];
+
+// Converts the given example-relative path (like 'app/main.ts')
+// to a site-relative path (like 'quickstart/ts/app/main.ts')
+export function computeFilePath(filePath, exampleName) {
+  filePath = stripQuotes(filePath);
+  if (isRelativeToExample(filePath, exampleName)) {
+    filePath = join(exampleName, filePath);
+  }
+  if (PATH_TRANSFORM_EXCEPTIONS.some(pattern => pattern.test(filePath))) {
+    return filePath;
+  } else {
+    return filePath.replace(/\/(js|ts|dart)\//, '/');
+  }
+}
+
+// Expects the path to be relative to the example (may need to use `getExampleRelativePath` first)
+// Title is not given so use the filePath, removing any '.1' or '_1' qualifier on the end
+export function computeTitleFromPath(exampleRelativePath) {
+  const matches = exampleRelativePath.match(/^(.*)[\._]\d(\.\w+)$/);
+  return matches ? matches[1] + matches[2] : exampleRelativePath;
+}
+
+export function isRelativeToExample(path, exampleName) {
+  return path.indexOf(exampleName) !== 0 &&
+         !path.match(/\/(js|ts|dart)(-snippets|-es6(-decorators)?)?\//) &&
+         !path.endsWith('e2e-spec.ts');
+  // Last conjunct handles case for shared project e2e test file like
+  // cb-component-communication/e2e-spec.js (is shared between ts & dart)
+}
+
+export function getExampleRelativePath(path, exampleName) {
+  return path.replace(new RegExp('^' + exampleName + '/'), '');
+}
+
+export function encodeHTML(text) {
+  return text
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
 }

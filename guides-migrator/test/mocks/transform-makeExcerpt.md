@@ -18,7 +18,13 @@
 
 
 
-<code-example path="toh-4/src/app/app.component.1.ts" linenums="false" title="toh-4/ts/src/app/app.component.ts (providers)" region="providers">
+<code-example path="transform-makeExcerpt/src/app/app.component.1.ts" linenums="false" title="src/app/app.component.ts (providers)" region="providers">
+
+</code-example>
+
+
+
+<code-example path="toh-4/src/app/app.component.1.ts" linenums="false" title="toh-4/src/app/app.component.ts (providers)" region="providers">
 
 </code-example>
 
