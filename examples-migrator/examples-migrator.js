@@ -74,7 +74,11 @@ boilerplate.forEach(oldPath => {
   fs.copySync(path.resolve(OLD_EXAMPLES_PATH, oldPath), path.resolve(BOILERPLATE_PATH, newPath));
 });
 
-// // Copy our custom gitignore and replace the other one
+// Copy our custom gitignore and replace the other one
 console.log('Replacing the .gitignore with our new one.')
 const gitignoreFile = fs.readFileSync(path.join(__dirname, 'gitignore'));
 fs.writeFileSync(path.join(NEW_EXAMPLES_PATH, '.gitignore'), gitignoreFile);
+
+// Special case for the styles.css of cli-quickstart
+const stylesCss = fs.readFileSync(path.join(BOILERPLATE_PATH, 'boilerplate/src/styles.css'));
+fs.writeFileSync(path.join(NEW_EXAMPLES_PATH, 'cli-quickstart/src/styles.css'));
