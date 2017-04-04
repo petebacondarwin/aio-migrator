@@ -1,12 +1,12 @@
 
 
----
+<hr/>
 
 Some paragraph
 
---- {.hr-margin}
+<hr class="hr-margin"/>
 
 another paragraph
 
---- {.hr-margin}
+<hr class="hr-margin"/>
 
