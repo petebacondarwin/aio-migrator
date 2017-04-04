@@ -1,9 +1,7 @@
 Some content
 
 
-~~~ {.l-sub-section}
-
+<div markdown="1" class="l-sub-section">
 ## some heading
-
-~~~
+</div>
 
