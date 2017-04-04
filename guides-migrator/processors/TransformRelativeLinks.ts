@@ -45,7 +45,3 @@ function stripExtension(url: string) {
 function isAbsolute(url: string) {
   return /^[a-z]+:\/\/|^\/\/|^\//i.test(url);
 }
-
-
-
-// relative links between pages

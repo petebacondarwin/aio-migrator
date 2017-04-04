@@ -17,12 +17,12 @@ export class TransformHorizontalRuleProcessor implements Processor {
             const cssClasses = collectClasses(tagNode);
             if (cssClasses['l-hr']) {
               delete cssClasses['l-hr'];
-              let classString = Object.keys(cssClasses).map(c => '.' + c).join('');
+              let classString = Object.keys(cssClasses).join(' ');
               if (classString.length) {
-                classString =  ` {${classString}}`;
+                classString =  ` class="${classString}"`;
               }
               replace([
-                createTextNode(node, `\n\n---${classString}\n\n`),
+                createTextNode(node, `\n\n<hr${classString}/>\n\n`),
               ]);
             }
           }
