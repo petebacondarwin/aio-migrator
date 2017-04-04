@@ -19,9 +19,9 @@ export class TransformComponentsProcessor implements Processor {
             const cssClasses = collectClasses(tagNode);
             if (this.matchClasses.some(cssClass => cssClasses[cssClass])) {
               replace([
-                createTextNode(node, `\n\n~~~ {.${Object.keys(cssClasses).join('.')}}\n\n`),
+                createTextNode(node, `\n\n<div class="${Object.keys(cssClasses).join(' ')}">\n\n`),
                 ...tagNode.block.nodes,
-                createTextNode(node, '\n\n~~~\n\n')
+                createTextNode(node, '\n\n</div>\n\n')
               ]);
             }
           }

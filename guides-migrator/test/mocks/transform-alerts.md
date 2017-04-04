@@ -1,17 +1,17 @@
 
 
-~~~ {.alert.is-important}
+<div class="alert is-important">
 
 abc
 xyz
 
-~~~
+</div>
 
 new content
 
-~~~ {.alert.is-helpful}
+<div class="alert is-helpful">
 
 content
 
-~~~
+</div>
 

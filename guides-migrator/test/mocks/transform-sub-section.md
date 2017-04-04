@@ -1,9 +1,9 @@
 Some content
 
 
-~~~ {.l-sub-section}
+<div class="l-sub-section">
 
 ## some heading
 
-~~~
+</div>
 
