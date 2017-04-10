@@ -81,4 +81,4 @@ fs.writeFileSync(path.join(NEW_EXAMPLES_PATH, '.gitignore'), gitignoreFile);
 
 // Special case for the styles.css of cli-quickstart
 const stylesCss = fs.readFileSync(path.join(BOILERPLATE_PATH, 'boilerplate/src/styles.css'));
-fs.writeFileSync(path.join(NEW_EXAMPLES_PATH, 'cli-quickstart/src/styles.css'));
+fs.writeFileSync(path.join(NEW_EXAMPLES_PATH, 'cli-quickstart/src/styles.css'), stylesCss);
