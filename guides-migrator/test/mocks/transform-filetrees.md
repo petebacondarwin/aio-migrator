@@ -1,26 +1,30 @@
 
 
-<aio-filetree>
+<div class='filetree'>
 
-  <aio-folder>
+  <div class='file'>
     app
-    <aio-file>
+  </div>
+
+  <div class='children'>
+
+    <div class='file'>
       some.component.css
-    </aio-file>
+    </div>
 
-    <aio-file>
+    <div class='file'>
       some.component.html
-    </aio-file>
+    </div>
 
-    <aio-file>
+    <div class='file'>
       some.component.ts
-    </aio-file>
+    </div>
 
-  </aio-folder>
+  </div>
 
-  <aio-file>
+  <div class='file'>
     ...
-  </aio-file>
+  </div>
 
-</aio-filetree>
+</div>
 
